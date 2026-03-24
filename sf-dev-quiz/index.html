@@ -178,7 +178,7 @@ function sH(){try{localStorage.setItem(HK,JSON.stringify(hi));}catch(e){}
 if(currentUser){dbFB.collection('users').doc(currentUser.uid).collection('quiz_history').doc('hi').set({s:hi.s||[],w:hi.w||[],updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).catch(function(e){console.error('Firestore write error',e)})}}
 function loadFromFirestore(){if(!currentUser)return Promise.resolve();return dbFB.collection('users').doc(currentUser.uid).collection('quiz_history').doc('hi').get().then(function(snap){if(snap.exists){var d=snap.data();var cloud={s:d.s||[],w:d.w||[]};var local=hi;var merged={s:[],w:[]};var ss=new Set(local.s);(cloud.s||[]).forEach(function(v){ss.add(v)});merged.s=Array.from(ss);var ws=new Set(local.w);(cloud.w||[]).forEach(function(v){ws.add(v)});merged.w=Array.from(ws);hi=merged;localStorage.setItem(HK,JSON.stringify(hi))}}).catch(function(e){console.error('Firestore read error',e)})}
 window.onload=function(){lH();iS();checkResume();uC();
-authFB.onAuthStateChanged(function(user){currentUser=user;uAuth();if(user){loadFromFirestore().then(function(){uC()})}});};
+authFB.onAuthStateChanged(function(user){currentUser=user;uAuth();if(user){loadFromFirestore().then(function(){uC();checkResume()})}else{uC()}});};
 function iS(){
 document.getElementById('hS').textContent='\u5168'+Q.length+'\u554f\u53ce\u9332';
 var rs=[...new Set(Q.map(function(q){return q.r;}).filter(Boolean))].sort();
